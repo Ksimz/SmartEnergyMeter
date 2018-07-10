@@ -1,0 +1,125 @@
+import "package:flutter/material.dart";
+import "package:path/path.dart";
+
+void main()
+{
+  runApp(MaterialApp(title: ' TIA POWER UTILITY',home:MyApp(),));
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return
+       Scaffold(
+        appBar: AppBar(
+          title: Text("TIA POWER UTILITY"),
+        ),
+        body: ListView(children: <Widget>[
+          Card(
+            child: Column(
+              children: <Widget>[
+                Image.asset("assets/23thelectricity.jpeg"),
+                Text("Powering The World")
+              ],
+            ),
+          ),
+          Column(children: <Widget>[
+            Container(
+              margin: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.all(10.0),
+                    child: Text('User Name'),
+                  ),
+                  Expanded(
+                    child: TextField(),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.all(10.0),
+                    child: Text('Password'),
+                  ),
+                  Expanded(
+                    child: TextField(),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(20.0),
+              child: Center(
+                child: RaisedButton(
+                    child: Text("Login"),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => NextPage()),
+                      );
+                    }),
+              ),
+            )
+          ]),
+        ]),
+      )
+    ;
+  }
+}
+// creating the second page a stateful widget
+
+class NextPage extends StatefulWidget {
+  @override
+  _NextPageState createState() => _NextPageState();
+}
+
+class _NextPageState extends State<NextPage> {
+  var balance = "";
+  var paid;
+
+  void recharge() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(" METER VALUES"),
+        ),
+        body: Column(children: <Widget>[
+          Container(
+            margin: const EdgeInsets.all(10.0),
+            child: Row(
+              children: <Widget>[
+                Text("Balance"),
+                   Expanded(child: TextField()),
+
+              ],
+            ),
+          ),Container(
+            margin: const EdgeInsets.all(10.0),
+            child: Row(
+              children: <Widget>[
+                Text("Amount"),
+                Expanded(child: TextField()),
+
+              ],
+            ),
+          ),
+          Container(child: RaisedButton(child:Text("Pay"),onPressed: (){}),),
+          Container(margin: const EdgeInsets.all(40.0),
+            child: RaisedButton(child:Text("Logout"),onPressed: (){Navigator.pop(context);}),)
+        ]
+
+
+            ),
+      );
+  }
+}
+
