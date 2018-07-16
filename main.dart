@@ -63,8 +63,6 @@ class _MyAppState extends State<MyApp> {
                 ),
                 Expanded(
                   child: TextField(
-                    decoration:
-                        InputDecoration(hintText: "Enter User Name Here"),
                     onSubmitted: (String str) {
                       setState(() {
                         result = str;
@@ -88,8 +86,6 @@ class _MyAppState extends State<MyApp> {
                 ),
                 Expanded(
                   child: TextField(
-                    decoration:
-                        InputDecoration(hintText: "Enter Password Here"),
                     onSubmitted: (String ptr) {
                       setState(() {
                         result2 = ptr;
@@ -134,7 +130,7 @@ class NextPage extends StatefulWidget {
 }
 
 class _NextPageState extends State<NextPage> {
-  final TextEditingController controller3=TextEditingController();
+  final TextEditingController controller3 = TextEditingController();
 
   var balance = "";
   var paid;
@@ -146,8 +142,7 @@ class _NextPageState extends State<NextPage> {
         body: {"CustomerNumber": '1000'});
     print(response1.body);
     Map<String, dynamic> data = json.decode(response1.body);
-    controller3.text=" "+"R"+data["balance"];
-
+    controller3.text = " " + "R" + data["balance"];
   }
 
   void recharge() {
@@ -167,7 +162,11 @@ class _NextPageState extends State<NextPage> {
           child: Row(
             children: <Widget>[
               Text("Balance"),
-              Expanded(child: TextField(controller: controller3,enabled: false,)),
+              Expanded(
+                  child: TextField(
+                controller: controller3,
+                enabled: false,
+              )),
             ],
           ),
         ),
@@ -175,13 +174,25 @@ class _NextPageState extends State<NextPage> {
           margin: const EdgeInsets.all(10.0),
           child: Row(
             children: <Widget>[
-              Text("Amount"),
-              Expanded(child: TextField()),
+              Text("Amount :R"),
+              Expanded(child: TextField(
+                onSubmitted: (String tre) {
+                  setState(() {
+                    paid = tre;
+                    print("Paid:" + paid);
+                  });
+                },
+              )),
             ],
           ),
         ),
         Container(
-          child: RaisedButton(child: Text("Pay"), onPressed: () {}),
+          child: RaisedButton(
+              child: Text("Pay"),
+              onPressed: () {
+                Pay();
+                getBalance();
+              }),
         ),
         Container(
           margin: const EdgeInsets.all(40.0),
@@ -193,5 +204,15 @@ class _NextPageState extends State<NextPage> {
         )
       ]),
     );
+  }
+
+  Future<http.Response> Pay() async {
+    var response2 = await http.post(
+        Uri.encodeFull("http://10.1.39.252/Payment.php"),
+        headers: {"Accept": "application/json"},
+        body: {"CustomerNumber": '1000', "Amount": paid});
+    print(response2.body);
+    //Map<String, dynamic> data = json.decode(response2.body);
+    // controller3.text=" "+"R"+data["balance"];
   }
 }
