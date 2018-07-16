@@ -11,21 +11,32 @@ void main() {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   String zan;
+  String result;
+  String result2;
+
+  final TextEditingController controller1 = TextEditingController();
+  final TextEditingController controller2 = TextEditingController();
 
   Future<http.Response> getData() async {
     print("101 executing");
     var response = await http.post(
         Uri.encodeFull("http://10.1.39.252/Login.php"),
         headers: {"Accept": "application/json"},
-        body: {"customerNumber": "1000", "password": "saveg"});
+        body: {"customerNumber": result, "password": result2});
     print(response.body);
 
     Map<String, dynamic> data = json.decode(response.body);
     //print(data["success"]);
-    zan=data["success"];
+    zan = data["success"];
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +48,7 @@ class MyApp extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Image.asset("assets/23thelectricity.jpeg"),
-              Text("Powering The World")
+              Text("T.I.A Powering The World")
             ],
           ),
         ),
@@ -51,7 +62,18 @@ class MyApp extends StatelessWidget {
                   child: Text('User Name'),
                 ),
                 Expanded(
-                  child: TextField(),
+                  child: TextField(
+                    decoration:
+                        InputDecoration(hintText: "Enter User Name Here"),
+                    onSubmitted: (String str) {
+                      setState(() {
+                        result = str;
+                        print(result);
+                      });
+                      // controller1.text = " ";
+                    },
+                    controller: controller1,
+                  ),
                 )
               ],
             ),
@@ -65,7 +87,19 @@ class MyApp extends StatelessWidget {
                   child: Text('Password'),
                 ),
                 Expanded(
-                  child: TextField(),
+                  child: TextField(
+                    decoration:
+                        InputDecoration(hintText: "Enter Password Here"),
+                    onSubmitted: (String ptr) {
+                      setState(() {
+                        result2 = ptr;
+                        print(ptr);
+                        // controller1.text = " ";
+                        //  controller2.text = " ";
+                      });
+                    },
+                    controller: controller2,
+                  ),
                 )
               ],
             ),
@@ -76,15 +110,14 @@ class MyApp extends StatelessWidget {
               child: RaisedButton(
                   child: Text("Login"),
                   onPressed: () {
-
-                      getData();
-                      print(zan);
-                      if(zan=="Welcome") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => NextPage()),
-                        );
-                      }
+                    getData();
+                    print(zan);
+                    if (zan == "Welcome") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => NextPage()),
+                      );
+                    }
                   }),
             ),
           )
@@ -101,9 +134,21 @@ class NextPage extends StatefulWidget {
 }
 
 class _NextPageState extends State<NextPage> {
+  final TextEditingController controller3=TextEditingController();
 
   var balance = "";
   var paid;
+
+  Future<http.Response> getBalance() async {
+    var response1 = await http.post(
+        Uri.encodeFull("http://10.1.39.252/Balance.php"),
+        headers: {"Accept": "application/json"},
+        body: {"CustomerNumber": '1000'});
+    print(response1.body);
+    Map<String, dynamic> data = json.decode(response1.body);
+    controller3.text=" "+"R"+data["balance"];
+
+  }
 
   void recharge() {
     setState(() {});
@@ -111,6 +156,7 @@ class _NextPageState extends State<NextPage> {
 
   @override
   Widget build(BuildContext context) {
+    getBalance();
     return Scaffold(
       appBar: AppBar(
         title: Text(" METER VALUES"),
@@ -121,7 +167,7 @@ class _NextPageState extends State<NextPage> {
           child: Row(
             children: <Widget>[
               Text("Balance"),
-              Expanded(child: TextField()),
+              Expanded(child: TextField(controller: controller3,enabled: false,)),
             ],
           ),
         ),
@@ -135,7 +181,7 @@ class _NextPageState extends State<NextPage> {
           ),
         ),
         Container(
-          child: RaisedButton(child: Text("Pay"), onPressed: (){}),
+          child: RaisedButton(child: Text("Pay"), onPressed: () {}),
         ),
         Container(
           margin: const EdgeInsets.all(40.0),
